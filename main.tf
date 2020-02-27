@@ -90,6 +90,7 @@ data "template_file" "task_definition" {
 
   vars = {
     image            = var.image
+    executionRoleArn = ""
     environment      = var.environment
     container_name   = "hqtrackbot"
     log_group_region = var.aws_region

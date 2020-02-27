@@ -2,7 +2,7 @@
     {
       "cpu": 256,
       "essential": true,
-      "executionRoleArn": ${execution_role_arn},
+      "executionRoleArn": "${execution_role_arn}",
       "environment": "${environment}",
       "image": "${image}",
       "memory": 512,
