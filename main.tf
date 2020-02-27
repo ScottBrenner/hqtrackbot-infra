@@ -6,6 +6,10 @@ provider "aws" {
   skip_metadata_api_check     = true
   access_key                  = "mock_access_key"
   secret_key                  = "mock_secret_key"
+
+  endpoints {
+    sts = "https://sts.us-west-1.amazonaws.com"
+  }
 }
 
 ## Fargate
