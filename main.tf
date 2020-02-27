@@ -1,6 +1,7 @@
 # Specify the provider and access details
 provider "aws" {
-  region = var.aws_region
+  region                     = var.aws_region
+  skip_requesting_account_id = true
 }
 
 ## Fargate
