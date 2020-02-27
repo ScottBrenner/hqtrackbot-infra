@@ -1,4 +1,4 @@
-name: 'Terraform GitHub Actions - Apply'
+name: 'Apply'
 on:
   push:
     branches:
