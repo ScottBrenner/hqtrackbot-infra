@@ -89,12 +89,12 @@ data "template_file" "hqtrackbot-task-definition-file" {
   template = file("./task-definition.json")
 
   vars = {
-    image            = var.image
-    executionRoleArn = ""
-    environment      = var.environment
-    container_name   = "hqtrackbot"
-    log_group_region = var.aws_region
-    log_group_name   = aws_cloudwatch_log_group.hqtrackbot-cloudwatch-log-group.name
+    image              = var.image
+    execution_role_arn = "arn:aws:iam::549655260017:role/ecsTaskExecutionRole"
+    environment        = var.environment
+    container_name     = "hqtrackbot"
+    log_group_region   = var.aws_region
+    log_group_name     = aws_cloudwatch_log_group.hqtrackbot-cloudwatch-log-group.name
   }
 }
 
@@ -134,7 +134,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "hqtrackbot-ecs-service-iam-role-policy" {
-  name = "tf_hqtrackbot_ecs_policy"
+  name = "hqtrackbot-ecs-service-iam-role-policy"
   role = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
 
   policy = <<EOF

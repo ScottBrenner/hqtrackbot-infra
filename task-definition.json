@@ -3,7 +3,7 @@
       "cpu": 256,
       "essential": true,
       "executionRoleArn": "${execution_role_arn}",
-      "environment": "${environment}",
+      "environment": [${environment}],
       "image": "${image}",
       "memory": 512,
       "name": "${container_name}",
