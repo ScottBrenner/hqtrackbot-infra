@@ -35,5 +35,20 @@ variable "image" {
 
 variable "environment" {
   description = "Environment variables for container"
-  default     = ""
+  default     = <<EOF
+  {
+    "name": "REDDIT_SUBREDDITS",
+    "value": "hqtrackbot+electronicmusic+techno+liquiddubstep+house+tech_house+OldSkoolDance+ambientmusic+AtmosphericDnB+BigBeat+boogiemusic+chicagohouse+chillout+Chipbreak+Chiptunes+complextro+cxd+darkstep+DubStep+EBM+electronicdancemusic+ElectronicJazz+ElectronicBlues+electrohiphop+electrohouse+electronicmagic+electroswing+fidget+filth+frenchelectro+frenchhouse+funkhouse+fusiondancemusic+futurebeats+FutureGarage+futuresynth+gabber+glitch+glitchop+happyhardcore+hardhouse+idm+industrialmusic+ItaloDisco+latinhouse+mashups+mixes+moombahcore+nightstep+OldskoolRave+Outrun+partymusic+plunderphonics+PsyBreaks+psytrance+purplemusic+raggajungle+skweee+swinghouse+tranceandbas+trap+tribalbeats+TropicalHouse+ukfunky+witchhouse+wuuB+SirBerryDinglesDiscog+AfroBashment"
+  }
+  EOF
+}
+
+variable "cpu" {
+  description = "Fargate instance CPU units to provision (1 vCPU = 1024 CPU units)"
+  default     = "256"
+}
+
+variable "memory" {
+  description = "Fargate instance memory to provision (in MiB)"
+  default     = "512"
 }
