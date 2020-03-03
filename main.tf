@@ -90,7 +90,7 @@ data "template_file" "hqtrackbot-task-definition-file" {
 
   vars = {
     image              = var.image
-    execution_role_arn = "arn:aws:iam::549655260017:role/ecsTaskExecutionRole"
+    execution_role_arn = aws_iam_role.hqtrackbot-ecs-service-iam-role.arn
     environment        = var.environment
     container_name     = "hqtrackbot"
     log_group_region   = var.aws_region
@@ -133,33 +133,9 @@ resource "aws_iam_role" "hqtrackbot-ecs-service-iam-role" {
 EOF
 }
 
-resource "aws_iam_role_policy" "hqtrackbot-ecs-service-iam-role-policy" {
-  name = "hqtrackbot-ecs-service-iam-role-policy"
-  role = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-        "elasticloadbalancing:DeregisterTargets",
-        "elasticloadbalancing:Describe*",
-        "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-        "elasticloadbalancing:RegisterTargets"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_instance_profile" "hqtrackbot-iam-instance-profile" {
-  name = "hqtrackbot-iam-instance-profile"
-  role = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
+resource "aws_iam_role_policy_attachment" "hqtrackbot-ecs-execution-role" {
+  role       = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 ## CloudWatch Logs

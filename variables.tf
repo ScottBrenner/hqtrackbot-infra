@@ -29,7 +29,7 @@ variable "service_desired" {
 }
 
 variable "image" {
-  description = "Docker image to run in Farge"
+  description = "Docker image to run in Fargate"
   default     = "scottbrenner/hqtrackbot:latest"
 }
 
