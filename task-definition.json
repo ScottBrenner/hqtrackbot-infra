@@ -1,0 +1,52 @@
+[
+    {
+      "cpu": ${cpu},
+      "essential": true,
+      "executionRoleArn": "${execution_role_arn}",
+      "environment": [${environment}],
+      "image": "${image}",
+      "memory": ${memory},
+      "name": "${container_name}",
+      "networkMode": "awsvpc",
+      "portMappings": [],
+      "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-group": "${log_group_name}",
+              "awslogs-region": "${log_group_region}",
+              "awslogs-stream-prefix": "${container_name}"
+          }
+      },
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_AWS_ACCESS_KEY_ID",
+          "name": "AWS_ACCESS_KEY_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_AWS_SECRET_ACCESS_KEY",
+          "name": "AWS_SECRET_ACCESS_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_REDDIT_CLIENT_ID",
+          "name": "REDDIT_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_REDDIT_CLIENT_SECRET",
+          "name": "REDDIT_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_REDDIT_PASSWORD",
+          "name": "REDDIT_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_REDDIT_USERNAME",
+          "name": "REDDIT_USERNAME"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-1:549655260017:parameter/HQTB_YOUTUBE_DEVELOPER_KEY",
+          "name": "YOUTUBE_DEVELOPER_KEY"
+        }
+      ]
+    }
+  ]
+  
