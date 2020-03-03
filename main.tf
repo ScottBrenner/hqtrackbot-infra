@@ -9,45 +9,45 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_vpc" "main" {
+resource "aws_vpc" "hqtrackbot-vpc" {
   cidr_block = "10.10.0.0/16"
 }
 
 # Create var.az_count public subnets
-resource "aws_subnet" "main" {
+resource "aws_subnet" "hqtrackbot-public-subnet" {
   count             = var.az_count
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
+  cidr_block        = cidrsubnet(aws_vpc.hqtrackbot-vpc.cidr_block, 8, count.index)
   availability_zone = data.aws_availability_zones.available.names[count.index]
-  vpc_id            = aws_vpc.main.id
+  vpc_id            = aws_vpc.hqtrackbot-vpc.id
 }
 
 # Internet Gateway for the public subnet
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
+resource "aws_internet_gateway" "hqtrackbot-gateway" {
+  vpc_id = aws_vpc.hqtrackbot-vpc.id
 }
 
 # Route the public subnet traffic through the IGW
-resource "aws_route_table" "r" {
-  vpc_id = aws_vpc.main.id
+resource "aws_route_table" "hqtrackbot-route-table" {
+  vpc_id = aws_vpc.hqtrackbot-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = aws_internet_gateway.hqtrackbot-gateway.id
   }
 }
 
 # Associate the newly route tables to the public subnet
-resource "aws_route_table_association" "a" {
+resource "aws_route_table_association" "hqtrackbot-route-table-association" {
   count          = var.az_count
-  subnet_id      = element(aws_subnet.main.*.id, count.index)
-  route_table_id = aws_route_table.r.id
+  subnet_id      = element(aws_subnet.hqtrackbot-public-subnet.*.id, count.index)
+  route_table_id = aws_route_table.hqtrackbot-route-table.id
 }
 
 ### Compute
 
-resource "aws_appautoscaling_target" "target" {
+resource "aws_appautoscaling_target" "hqtrackbot-appautoscaling-target" {
   service_namespace  = "ecs"
-  resource_id        = "service/${aws_ecs_cluster.main.name}/${aws_ecs_service.hqtrackbot-ecs_service.name}"
+  resource_id        = "service/${aws_ecs_cluster.hqtrackbot-ecs-cluster.name}/${aws_ecs_service.hqtrackbot-ecs_service.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   min_capacity       = 1
   max_capacity       = 1
@@ -55,10 +55,10 @@ resource "aws_appautoscaling_target" "target" {
 
 ### Security
 
-resource "aws_security_group" "ecs_sg" {
+resource "aws_security_group" "hqtrackbot-ecs-security-group" {
   description = "controls access to the application"
 
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.hqtrackbot-vpc.id
   name   = "hqtrackbot-ecs-lbsg"
 
   ingress {
@@ -81,11 +81,11 @@ resource "aws_security_group" "ecs_sg" {
 
 ## ECS
 
-resource "aws_ecs_cluster" "main" {
+resource "aws_ecs_cluster" "hqtrackbot-ecs-cluster" {
   name = "hqtrackbot_ecs_cluster"
 }
 
-data "template_file" "task_definition" {
+data "template_file" "hqtrackbot-task-definition-file" {
   template = file("./task-definition.json")
 
   vars = {
@@ -94,27 +94,27 @@ data "template_file" "task_definition" {
     environment      = var.environment
     container_name   = "hqtrackbot"
     log_group_region = var.aws_region
-    log_group_name   = aws_cloudwatch_log_group.hqtrackbot.name
+    log_group_name   = aws_cloudwatch_log_group.hqtrackbot-cloudwatch-log-group.name
   }
 }
 
 resource "aws_ecs_task_definition" "hqtrackbot-task_definition" {
   family                = "hqtrackbot-task_definition"
-  container_definitions = data.template_file.task_definition.rendered
+  container_definitions = data.template_file.hqtrackbot-task-definition-file.rendered
 }
 
 resource "aws_ecs_service" "hqtrackbot-ecs_service" {
   name            = "hqtrackbot-ecs_service"
   launch_type     = "FARGATE"
-  cluster         = aws_ecs_cluster.main.id
+  cluster         = aws_ecs_cluster.hqtrackbot-ecs-cluster.id
   task_definition = aws_ecs_task_definition.hqtrackbot-task_definition.arn
   desired_count   = var.service_desired
 }
 
 ## IAM
 
-resource "aws_iam_role" "ecs_service" {
-  name = "tf_hqtrackbot_ecs_role"
+resource "aws_iam_role" "hqtrackbot-ecs-service-iam-role" {
+  name = "hqtrackbot-ecs-service-iam-role"
 
   assume_role_policy = <<EOF
 {
@@ -133,9 +133,9 @@ resource "aws_iam_role" "ecs_service" {
 EOF
 }
 
-resource "aws_iam_role_policy" "ecs_service" {
+resource "aws_iam_role_policy" "hqtrackbot-ecs-service-iam-role-policy" {
   name = "tf_hqtrackbot_ecs_policy"
-  role = "aws_iam_role.ecs_service.name"
+  role = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
 
   policy = <<EOF
 {
@@ -157,17 +157,13 @@ resource "aws_iam_role_policy" "ecs_service" {
 EOF
 }
 
-resource "aws_iam_instance_profile" "hqtrackbot" {
-  name = "tf-ecs-instprofile"
-  role = "aws_iam_role.hqtrackbot_instance.name"
+resource "aws_iam_instance_profile" "hqtrackbot-iam-instance-profile" {
+  name = "hqtrackbot-iam-instance-profile"
+  role = "aws_iam_role.hqtrackbot-ecs-service-iam-role.name"
 }
 
 ## CloudWatch Logs
 
-resource "aws_cloudwatch_log_group" "ecs" {
-  name = "tf-ecs-group/ecs-agent"
-}
-
-resource "aws_cloudwatch_log_group" "hqtrackbot" {
-  name = "tf-ecs-group/hqtrackbot"
+resource "aws_cloudwatch_log_group" "hqtrackbot-cloudwatch-log-group" {
+  name = "hqtrackbot-cloudwatch-log-group"
 }
