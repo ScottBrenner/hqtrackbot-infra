@@ -3,6 +3,17 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Create & use S3 remote state
+
+terraform {
+  backend "s3" {
+    bucket  = "scottbrenner-tf-state-bucket"
+    key     = "hqtrackbot/terraform.tfstate"
+    region  = "us-west-1"
+    encrypt = true
+  }
+}
+
 ## Fargate
 
 ### Network
