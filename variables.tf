@@ -38,7 +38,7 @@ variable "environment" {
   default     = <<EOF
   {
     "name": "REDDIT_SUBREDDITS",
-    "value": "AfroBashment+ambientmusic+AtmosphericDnB+BigBeat+boogiemusic+chicagohouse+chillout+Chipbreak+Chiptunes+complextro+cxd+darkstep+DubStep+EBM+electrohiphop+electrohouse+ElectronicBlues+electronicdancemusic+ElectronicJazz+electronicmagic+electronicmusic+electroswing+fidget+filth+frenchelectro+frenchhouse+funkhouse+fusiondancemusic+futurebeats+FutureGarage+futuresynth+gabber+glitch+glitchop+happyhardcore+hardhouse+house+hqtrackbot+idm+industrialmusic+ItaloDisco+latinhouse+liquiddubstep+mashups+moombahcore+nightstep+OldSkoolDance+OldskoolRave+Outrun+partymusic+plunderphonics+PsyBreaks+psytrance+purplemusic+raggajungle+SirBerryDinglesDiscog+skweee+swinghouse+tech_house+techno+tranceandbas+trap+tribalbeats+TropicalHouse+ukfunky+witchhouse+wuuB"
+    "value": "AfroBashment+ambientmusic+AtmosphericDnB+BigBeat+boogiemusic+chicagohouse+chillout+Chipbreak+Chiptunes+complextro+cxd+darkstep+DubStep+EBM+electrohiphop+electrohouse+ElectronicBlues+electronicdancemusic+ElectronicJazz+electronicmagic+electroswing+fidget+filth+frenchelectro+frenchhouse+funkhouse+fusiondancemusic+futurebeats+FutureGarage+futuresynth+gabber+glitch+glitchop+happyhardcore+hardhouse+hqtrackbot+idm+industrialmusic+ItaloDisco+latinhouse+liquiddubstep+mashups+moombahcore+nightstep+OldSkoolDance+OldskoolRave+Outrun+partymusic+plunderphonics+PsyBreaks+psytrance+purplemusic+raggajungle+SirBerryDinglesDiscog+skweee+swinghouse+tech_house+techno+tranceandbas+trap+tribalbeats+TropicalHouse+ukfunky+witchhouse+wuuB"
   }
   EOF
 }
