@@ -30,7 +30,7 @@ variable "service_desired" {
 
 variable "image" {
   description = "Docker image to run in Fargate"
-  default     = "scottbrenner/hqtrackbot:latest"
+  default     = "ghcr.io/scottbrenner/hqtrackbot:latest"
 }
 
 variable "environment" {
